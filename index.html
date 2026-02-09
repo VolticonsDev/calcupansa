@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Eternally</title>
+    <style>
+        body { 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background-color: #fff0f6; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .card { 
+            background: white;
+            border: 3px solid #ff85c0; 
+            border-radius: 30px; 
+            padding: 40px 20px; 
+            text-align: center; 
+            width: 350px; 
+            position: relative; 
+            box-shadow: 0 10px 20px rgba(255, 133, 192, 0.2);
+        }
+        .logo { width: 150px; margin-bottom: 10px; border-radius: 20px; }
+        h1 { color: #d44794; font-size: 1.2rem; margin: 0; }
+        .instrucciones { 
+            color: #722ed1; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            margin: 10px 0; 
+            line-height: 1.2; 
+        }
+        hr { border: 1.5px solid #ff85c0; width: 80%; margin: 20px auto; opacity: 0.5; }
+        input { 
+            border: 2px solid #ef7ec3; 
+            border-radius: 15px; 
+            padding: 12px; 
+            width: 80%; 
+            text-align: center; 
+            font-size: 1rem; 
+            color: #d44794; 
+            outline: none; 
+            margin-bottom: 20px;
+            background-color: #fff9fc;
+        }
+        button { 
+            background: linear-gradient(45deg, #ff85c0, #722ed1); 
+            color: white; 
+            border: none; 
+            border-radius: 20px; 
+            padding: 12px 40px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 1.1rem; 
+            box-shadow: 0 4px #b37feb; 
+            transition: 0.2s;
+        }
+        button:active { 
+            box-shadow: 0 2px #b37feb; 
+            transform: translateY(2px); 
+        }
+        #resultado { 
+            margin-top: 25px; 
+            color: #d44794; 
+            font-weight: bold; 
+            font-size: 1.8rem; 
+            min-height: 35px;
+            text-shadow: 1px 1px 0px #fff;
+        }
+        .footer { 
+            font-size: 0.75rem; 
+            color: #b37feb; 
+            margin-top: 25px; 
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <img src="imagen.png" class="logo" alt="totoi">
+    <h1>Calculadora Eternally🌹</h1>
+    <p class="instrucciones">para comprar en poca, me @ en el grupo así llenas el form!</p>
+    <hr>
+    
+    <input type="number" id="monto" placeholder="número con punto, ej: 13.03">
+    <br>
+    <button onclick="calcular()">calcular!!</button>
+
+    <div id="resultado"></div>
+    <div class="footer">@chaewon.minion</div>
+</div>
+
+<script>
+    async function calcular() {
+        const monto = document.getElementById('monto').value;
+        const display = document.getElementById('resultado');
+
+        if (!monto || monto <= 0) {
+            display.innerText = "poné un número!";
+            return;
+        }
+
+        display.innerText = "calculando...";
+
+        try {
+            const response = await fetch(`/api/cotizar?monto=${monto}`);
+            const data = await response.json();
+
+            if (data.total) {
+                display.innerText = data.total.toLocaleString('es-AR', { 
+                    style: 'currency', 
+                    currency: 'ARS',
+                    minimumFractionDigits: 0
+                });
+            } else {
+                display.innerText = "error :(";
+            }
+        } catch (error) {
+            display.innerText = "error de conexión";
+            console.error(error);
+        }
+    }
+</script>
+</body>
+</html>
